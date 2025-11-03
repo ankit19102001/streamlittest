@@ -1,8 +1,5 @@
 [server]
 headless = true
-port = 7860
+port = $PORT
 enableCORS = false
-enableXsrfProtection = false
-
-[browser]
-gatherUsageStats = false
+address = "0.0.0.0"

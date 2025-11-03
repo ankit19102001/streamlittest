@@ -1,20 +1,20 @@
+# Use an official lightweight Python image
 FROM python:3.10-slim
 
+# Set the working directory
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+# Copy requirements first for caching
+COPY requirements.txt .
 
-COPY requirements.txt ./
-COPY . .
-
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 7860
+# Copy all project files
+COPY . .
 
-HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health || exit 1
+# Expose the port that Railway provides
+EXPOSE 8080
 
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Run Streamlit app with dynamic port
+CMD ["sh", "-c", "streamlit run app.py --server.port=$PORT --server.address=0.0.0.0"]
